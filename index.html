@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheam Broadway Bus Times</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 10px;
+        }
+        #busTimes {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Next Buses from Cheam Broadway to Kingston</h1>
+    <p>Debugging: Showing all routes</p>
+    <div id="busTimes">Loading bus times...</div>
+
+    <script>
+        const API_KEY = '9858dd6ef7bd41cdb050376e7463189d';
+        const STOP_ID = '490005056D'; // Replace with Cheam Broadway Stop D ID
+
+        async function fetchBusTimes() {
+            try {
+                const response = await fetch(
+                    `https://api.tfl.gov.uk/StopPoint/${STOP_ID}/Arrivals?app_key=${API_KEY}`
+                );
+                const data = await response.json();
+
+                // Log the full response to console
+                console.log('API Response:', data);
+
+                // Display all buses (no filtering)
+                const busTimesDiv = document.getElementById('busTimes');
+                if (data.length === 0) {
+                    busTimesDiv.innerHTML = 'No upcoming buses found.';
+                    return;
+                }
+
+                let output = '';
+                data.sort((a, b) => a.timeToStation - b.timeToStation);
+                data.slice(0, 5).forEach(bus => {
+                    // Calculate minutes to arrival
+                    const minutesToArrival = Math.floor(bus.timeToStation / 60);
+                    
+                    // Parse exact arrival time (expectedArrival is in ISO 8601, e.g., "2025-05-04T14:35:00Z")
+                    const arrivalTime = new Date(bus.expectedArrival);
+                    const timeString = arrivalTime.toLocaleTimeString('en-GB', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }); // e.g., "14:35"
+
+                    output += `${bus.lineId} to ${bus.destinationName}: ${timeString} (${minutesToArrival} min)<br>`;
+                });
+                busTimesDiv.innerHTML = output;
+            } catch (error) {
+                document.getElementById('busTimes').innerHTML = 'Error loading bus times.';
+                console.error(error);
+            }
+        }
+
+        // Fetch bus times on page load
+        fetchBusTimes();
+        // Refresh every 30 seconds
+        setInterval(fetchBusTimes, 30000);
+    </script>
+</body>
+</html>
