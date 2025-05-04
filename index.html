@@ -21,64 +21,13 @@
             margin-left: auto;
             margin-right: auto;
         }
-        #refresh {
-            margin-top: 10px;
-            font-size: 16px;
-        }
     </style>
 </head>
 <body>
-    <h1>Cheam Broadway Buses</h1>
-    <p>Debug: All routes</p>
-    <div id="busTimes">Loading bus times...</div>
-    <button id="refresh" onclick="fetchBusTimes()">Refresh</button>
-
-    <script>
-        const API_KEY = '9858dd6ef7bd41cdb050376e7463189d';
-        const STOP_ID = '490005056D'; // Replace with Cheam Broadway Stop D ID
-
-        async function fetchBusTimes() {
-            const busTimesDiv = document.getElementById('busTimes');
-            busTimesDiv.innerHTML = 'Loading bus times...';
-
-            try {
-                // Add timeout to fetch
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
-                const response = await fetch(
-                    `https://api.tfl.gov.uk/StopPoint/${STOP_ID}/Arrivals?app_key=${API_KEY}`,
-                    { signal: controller.signal }
-                );
-                clearTimeout(timeoutId);
-
-                const data = await response.json();
-                console.log('API Response:', data);
-
-                if (data.length === 0) {
-                    busTimesDiv.innerHTML = 'No buses found.';
-                    return;
-                }
-
-                let output = '';
-                data.sort((a, b) => a.timeToStation - b.timeToStation);
-                data.slice(0, 5).forEach(bus => {
-                    const minutesToArrival = Math.floor(bus.timeToStation / 60);
-                    const arrivalTime = new Date(bus.expectedArrival);
-                    const timeString = arrivalTime.toLocaleTimeString('en-GB', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    output += `${bus.lineId} to ${bus.destinationName}: ${timeString} (${minutesToArrival} min)<br>`;
-                });
-                busTimesDiv.innerHTML = output;
-            } catch (error) {
-                busTimesDiv.innerHTML = 'Error: Check internet or refresh.';
-                console.error(error);
-            }
-        }
-
-        // Fetch on load
-        fetchBusTimes();
-    </script>
+    <h1>Cheam Broadway SL7/213</h1>
+    <p>Bus times to Kingston</p>
+    <div id="busTimes">
+        Visit <a href="https://m.tfl.gov.uk">m.tfl.gov.uk</a> for live SL7 and 213 bus times.
+    </div>
 </body>
 </html>
