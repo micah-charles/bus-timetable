@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const API_KEY = process.env.TFL_TOKEN || 'missing-tfl-token'; // Fallback for local testing
-const STOP_ID = '490005056D'; // Replace with Cheam Broadway Stop D ID
+const STOP_ID = '490005056D'; // Cheam Broadway Stop D ID
 
 app.get('/', async (req, res) => {
     try {
@@ -72,8 +72,12 @@ app.get('/', async (req, res) => {
             });
         }
 
+        // Add debug info
+        const now = new Date();
+        const debugTime = formatInTimeZone(now, 'Europe/London', 'HH:mm z');
         output += `
                 </div>
+                <p>Current time (BST): ${debugTime}</p>
                 <p><a href="/">Refresh</a></p>
             </body>
             </html>
