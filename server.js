@@ -1,5 +1,6 @@
 const express = require('express');
 const fetch = require('node-fetch');
+const { formatInTimeZone } = require('date-fns-tz');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -62,10 +63,11 @@ app.get('/', async (req, res) => {
             relevantBuses.slice(0, 5).forEach(bus => {
                 const minutesToArrival = Math.floor(bus.timeToStation / 60);
                 const arrivalTime = new Date(bus.expectedArrival);
-                const timeString = arrivalTime.toLocaleTimeString('en-GB', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
+                const timeString = formatInTimeZone(
+                    arrivalTime,
+                    'Europe/London',
+                    'HH:mm' // 24-hour format, e.g., 14:35
+                );
                 output += `${bus.lineId} to ${bus.destinationName}: ${timeString} (${minutesToArrival} min)<br>`;
             });
         }
