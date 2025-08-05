@@ -10,7 +10,8 @@ const API_KEY = process.env.TFL_TOKEN || 'missing-tfl-token';
 const STOPS = {
     '490005056D': 'Cheam Broadway Stop D',
     '490009451N': 'Lumley Road Stop N',
-    '490003909N': 'Kingston / Wood Street Stop N'
+    '490003909N': 'Kingston / Wood Street Stop N',
+    '490013664C1': 'Tiffin School / London Road Stop B'
 };
 
 // Root page: show 3 hyperlinks
