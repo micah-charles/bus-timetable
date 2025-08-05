@@ -54,9 +54,7 @@ app.get('/stop/:stopId', async (req, res) => {
         const data = await response.json();
 
         const relevantBuses = data
-            .filter(bus => (bus.lineId === 'SL7' || bus.lineId === '213') &&
-                           bus.destinationName.includes('Kingston'))
-            .sort((a, b) => a.timeToStation - b.timeToStation);
+            .sort((a, b) => a.timeToStation - b.timeToStation);        
 
         let output = `
             <!DOCTYPE html>
