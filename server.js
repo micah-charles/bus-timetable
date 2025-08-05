@@ -11,7 +11,8 @@ const STOPS = {
     '490005056D': 'Cheam Broadway Stop D',
     '490009451N': 'Lumley Road Stop N',
     '490003909N': 'Kingston / Wood Street Stop N',
-    '490013664C1': 'Tiffin School / London Road Stop B'
+    '490013664C1': 'Tiffin School / London Road Stop B',
+    '40004405129A': 'Esher Road'
 };
 
 // Root page: show 3 hyperlinks
