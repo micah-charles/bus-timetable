@@ -11,6 +11,7 @@ const STOPS = {
     '490005056D': 'Cheam Broadway Stop D',
     '490009451N': 'Lumley Road Stop N',
     '490001346C': 'Worcester Park Station (Stop C)',
+    '490015206K': 'New Malden / the Fountain stop K',      
     '490015206L': 'New Malden / Kingston Road (Stop L)',    
     '490003909N': 'Kingston / Wood Street Stop N',
     '490013664C1': 'Tiffin School / London Road Stop B',
