@@ -15,14 +15,17 @@ const STOPS = {
     '490015206L': { flag: 32, name: 'New Malden / Kingston Road (Stop L)' },
     '490003909N': { flag: 64, name: 'Kingston / Wood Street Stop N' },
     '490013664C1': { flag: 128, name: 'Tiffin School / London Road Stop B' },
-    '40004405129A': { flag: 256, name: 'Esher Road' }
+    '40004405129A': { flag: 256, name: 'Esher Road' },
+    '490010323G': { flag: 512, name: 'North Cheam / London Road Stop G' }
+    '490010323G': { flag: 1024, name: 'Pagoda Avenue (Stop RF)' }
 };
 
 // Map site to combined flags
 const SITE_FLAGS = {
-    Cheam: 2 + 4 + 64 + 128 + 256,
+    Cheam: 2 + 4 + 64 + 128 + 256 + 512,
     WorcesterPark: 8 + 64 + 128 + 256,
-    NewMalden: 16 + 32 + 64 + 128 + 256    
+    NewMalden: 16 + 32 + 64 + 128 + 256,
+    Richmond: 1024,    
 };
 
 // Home page: filter by site param
@@ -64,7 +67,8 @@ const links = filteredStops
                 View site: 
                 <a href="/?site=Cheam">Cheam</a> | 
                 <a href="/?site=WorcesterPark">WorcesterPark</a> | 
-                <a href="/?site=NewMalden">NewMalden</a>
+                <a href="/?site=NewMalden">NewMalden</a> | 
+                <a href="/?site=Richmond">Richmond</a>
             </p>
         </body>
         </html>
