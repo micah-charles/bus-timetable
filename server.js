@@ -6,23 +6,41 @@ const port = process.env.PORT || 3000;
 
 const API_KEY = process.env.TFL_TOKEN || 'missing-tfl-token';
 
-// Define the bus stops and display names
+// Define stops with flag and name
 const STOPS = {
-    '490005056D': 'Cheam Broadway Stop D',
-    '490009451N': 'Lumley Road Stop N',
-    '490001346C': 'Worcester Park Station (Stop C)',
-    '490015206K': 'New Malden / the Fountain stop K',      
-    '490015206L': 'New Malden / Kingston Road (Stop L)',    
-    '490003909N': 'Kingston / Wood Street Stop N',
-    '490013664C1': 'Tiffin School / London Road Stop B',
-    '40004405129A': 'Esher Road'
+    '490005056D': { flag: 2, name: 'Cheam Broadway Stop D' },
+    '490009451N': { flag: 4, name: 'Lumley Road Stop N' },
+    '490001346C': { flag: 8, name: 'Worcester Park Station (Stop C)' },
+    '490015206K': { flag: 16, name: 'New Malden / the Fountain stop K' },
+    '490015206L': { flag: 32, name: 'New Malden / Kingston Road (Stop L)' },
+    '490003909N': { flag: 64, name: 'Kingston / Wood Street Stop N' },
+    '490013664C1': { flag: 128, name: 'Tiffin School / London Road Stop B' },
+    '40004405129A': { flag: 256, name: 'Esher Road' }
 };
 
-// Root page: show 3 hyperlinks
+// Map site to combined flags
+const SITE_FLAGS = {
+    Cheam: 2 + 4 + 64 + 128 + 256,
+    WorcesterPark: 8 + 64 + 128 + 256
+};
+
+// Home page: filter by site param
 app.get('/', (req, res) => {
-    const links = Object.entries(STOPS)
-        .map(([id, name]) => `<li><a href="/stop/${id}">${name}</a></li>`)
-        .join('');
+const site = req.query.site;
+const activeFlag = SITE_FLAGS[site];
+
+let filteredStops;
+if (activeFlag !== undefined) {
+    // Valid site param: filter stops by bitmask
+    filteredStops = Object.entries(STOPS).filter(([id, data]) => (data.flag & activeFlag) !== 0);
+} else {
+    // No site param or invalid site: show all
+    filteredStops = Object.entries(STOPS);
+}
+
+const links = filteredStops
+    .map(([id, data]) => `<li><a href="/stop/${id}">${data.name}</a></li>`)
+    .join('');
 
     res.send(`
         <!DOCTYPE html>
@@ -30,7 +48,7 @@ app.get('/', (req, res) => {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Bus Timetable</title>
+            <title>Bus Timetable - ${site}</title>
             <style>
                 body { font-family: Arial, sans-serif; text-align: center; margin: 20px; font-size: 18px; }
                 ul { list-style: none; padding: 0; }
@@ -39,8 +57,13 @@ app.get('/', (req, res) => {
             </style>
         </head>
         <body>
-            <h1>Select a Bus Stop</h1>
+            <h1>Select a Bus Stop (${site})</h1>
             <ul>${links}</ul>
+            <p>
+                View site: 
+                <a href="/?site=Cheam">Cheam</a> | 
+                <a href="/?site=WorcesterPark">WorcesterPark</a>
+            </p>
         </body>
         </html>
     `);
@@ -49,7 +72,8 @@ app.get('/', (req, res) => {
 // Page for a specific stop
 app.get('/stop/:stopId', async (req, res) => {
     const stopId = req.params.stopId;
-    const stopName = STOPS[stopId] || stopId;
+    const stopMeta = STOPS[stopId];
+    const stopName = stopMeta ? stopMeta.name : stopId;
 
     try {
         const response = await fetch(
@@ -58,8 +82,7 @@ app.get('/stop/:stopId', async (req, res) => {
         );
         const data = await response.json();
 
-        const relevantBuses = data
-            .sort((a, b) => a.timeToStation - b.timeToStation);        
+        const relevantBuses = data.sort((a, b) => a.timeToStation - b.timeToStation);
 
         let output = `
             <!DOCTYPE html>
@@ -67,7 +90,7 @@ app.get('/stop/:stopId', async (req, res) => {
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>${stopName} SL7/213</title>
+                <title>${stopName}</title>
                 <style>
                     body { font-family: Arial, sans-serif; text-align: center; margin: 10px; font-size: 18px; }
                     h1 { font-size: 20px; }
@@ -75,13 +98,12 @@ app.get('/stop/:stopId', async (req, res) => {
                 </style>
             </head>
             <body>
-                <h1>Next SL7/213 from ${stopName}</h1>
-                <p>Time and minutes to Kingston</p>
+                <h1>Next Buses from ${stopName}</h1>
                 <div id="busTimes">
         `;
 
         if (relevantBuses.length === 0) {
-            output += 'No SL7 or 213 buses found.';
+            output += 'No buses found.';
         } else {
             relevantBuses.slice(0, 5).forEach(bus => {
                 const minutesToArrival = Math.floor(bus.timeToStation / 60);
