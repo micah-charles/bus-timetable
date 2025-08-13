@@ -63,7 +63,8 @@ const links = filteredStops
             <p>
                 View site: 
                 <a href="/?site=Cheam">Cheam</a> | 
-                <a href="/?site=WorcesterPark">WorcesterPark</a>
+                <a href="/?site=WorcesterPark">WorcesterPark</a> | 
+                <a href="/?site=NewMalden">NewMalden</a>
             </p>
         </body>
         </html>
