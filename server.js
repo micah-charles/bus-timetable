@@ -25,7 +25,7 @@ const SITE_FLAGS = {
     Cheam: 2 + 4 + 64 + 128 + 256 + 512,
     WorcesterPark: 8 + 64 + 128 + 256,
     NewMalden: 16 + 32 + 64 + 128 + 256,
-    Richmond: 1024,    
+    Richmond: 1024   
 };
 
 // Home page: filter by site param
