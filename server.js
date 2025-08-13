@@ -21,7 +21,8 @@ const STOPS = {
 // Map site to combined flags
 const SITE_FLAGS = {
     Cheam: 2 + 4 + 64 + 128 + 256,
-    WorcesterPark: 8 + 64 + 128 + 256
+    WorcesterPark: 8 + 64 + 128 + 256,
+    NewMalden: 16 + 32 + 64 + 128 + 256    
 };
 
 // Home page: filter by site param
@@ -57,7 +58,7 @@ const links = filteredStops
             </style>
         </head>
         <body>
-            <h1>Select a Bus Stop (${site})</h1>
+            <h1>Select a Bus Stop${site ? ` (${site})` : ''}</h1>
             <ul>${links}</ul>
             <p>
                 View site: 
