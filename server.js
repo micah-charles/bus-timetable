@@ -16,8 +16,8 @@ const STOPS = {
     '490003909N': { flag: 64, name: 'Kingston / Wood Street Stop N' },
     '490013664C1': { flag: 128, name: 'Tiffin School / London Road Stop B' },
     '40004405129A': { flag: 256, name: 'Esher Road' },
-    '490010323G': { flag: 512, name: 'North Cheam / London Road Stop G' }
-    '490010323G': { flag: 1024, name: 'Pagoda Avenue (Stop RF)' }
+    '490010323G': { flag: 512, name: 'North Cheam / London Road Stop G' },
+    '490010725S': { flag: 1024, name: 'Pagoda Avenue (Stop RF)' }
 };
 
 // Map site to combined flags
